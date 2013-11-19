@@ -1,4 +1,6 @@
 RailstutorialChap3::Application.routes.draw do
+  get "relationships/create"
+  get "relationships/destroy"
   get "users/new"
   #get "static_pages/home"
   #get "static_pages/help"
@@ -7,6 +9,7 @@ RailstutorialChap3::Application.routes.draw do
   root  'static_pages#home'
   resources :sessions, only: [:new, :create, :destroy]
   resources :microposts, only: [:create, :destroy]
+  resources :relationships, only: [:create, :destroy]
   
   match '/help',    to: 'static_pages#help',    via: 'get'
   match '/about',   to: 'static_pages#about',   via: 'get'
@@ -15,7 +18,11 @@ RailstutorialChap3::Application.routes.draw do
   match '/signin',  to: 'sessions#new',         via: 'get'
   match '/signout', to: 'sessions#destroy',     via: 'delete'
 
-  resources :users
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
